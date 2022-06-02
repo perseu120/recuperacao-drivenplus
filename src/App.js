@@ -1,23 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
-
+import TelaCadastro from "./component/telaCadastro/TelaCadastro.js";
+import TelaLogin from "./component/telaLogin/TelaLogin.js";
+import {BrowserRouter, Routes, Route } from "react-router-dom"
+import Plano from "./component/plano/Plano.js";
+import AssinarPlano from "./component/assinarPlano/AssinarPlano.js";
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<TelaLogin/>} />
+          <Route path="/sign-up" element={<TelaCadastro/>} />
+          <Route path="/plano" element={<AssinarPlano/>} />
+        </Routes>
+      </BrowserRouter>
+      
     </div>
   );
 }
