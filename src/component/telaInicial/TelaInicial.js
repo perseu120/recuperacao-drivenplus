@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { FaRegUserCircle } from 'react-icons/fa';
+import { HiUserCircle } from 'react-icons/hi';
 import plano1 from "../../img/Group 1.png"
 
 
@@ -20,10 +20,17 @@ function TelaInicial() {
                 Ola fulano
             </h2>
 
-            <Button cor={"#FF4791;"} > botoes de teste</Button>
-            <Button cor={"#FF4791;"} > botoes de teste</Button>
-            <Button cor={"#FF4791;"} > botoes de teste</Button>
-            <Button cor={"#FF4747;"} > botoes de teste</Button>
+            <Div>
+                <section>
+                    <Button cor={"#FF4791;"} > botoes de teste</Button>
+                    <Button cor={"#FF4791;"} > botoes de teste</Button>
+                </section>
+                <section>
+                    <Button cor={"#FF4791;"} > botoes de teste</Button>
+                    <Button cor={"#FF4747;"} > botoes de teste</Button>
+                </section>
+            </Div>
+
 
         </Container>
     );
@@ -33,10 +40,17 @@ function Topo() {
     return (
         <ContainerTopo>
             <img src={plano1} />
-            <FaRegUserCircle color="red" />
+            <HiUserCircle color=" #FFFFFF" size={"30px"} />
         </ContainerTopo>
     );
 }
+
+const Div = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-around;
+`
 const Container = styled.div`
 
   display: flex;
@@ -52,7 +66,7 @@ const Container = styled.div`
     font-weight: 700;
     font-size: 24px;
     line-height: 28px;
-    
+    margin-top: 12px;
     color: #FFFFFF;
   }
   
@@ -63,6 +77,7 @@ const ContainerTopo = styled.div`
     justify-content: space-around;
     align-itens: center;
     width: 100%;
+    margin-top: 22px;
     
 
     img{
@@ -86,7 +101,7 @@ const Button = styled.div`
   padding: 18px, 122px, 18px, 122px;
   background: ${props => props.cor}
   border-radius: 8px;
-  margin-left: 10px;
+  margin-bottom: 8px;
   
 `
 
