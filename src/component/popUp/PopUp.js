@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { FaWindowClose } from 'react-icons/fa';
 
-function PopUp() {
+function PopUp({setPopUpVisivel}) {
 
   return (
     <Container>
-      <Topo />
+      <Topo setPopUpVisivel={setPopUpVisivel}/>
        <ContainerButton />
        
     </Container>
@@ -27,10 +27,10 @@ function ContainerButton(){
   )
 }
 
-function Topo() {
+function Topo({setPopUpVisivel}) {
   return (
     <ContainerTopo>
-      <FaWindowClose color="#FFFFFF" />
+      <FaWindowClose onClick={()=>setPopUpVisivel(false)} color="#FFFFFF" size={"30px"} />
     </ContainerTopo>
   );
 }

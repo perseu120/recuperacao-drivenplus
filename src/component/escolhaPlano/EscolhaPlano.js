@@ -1,27 +1,54 @@
 import axios from "axios";
-import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link} from "react-router-dom";
 import styled from "styled-components";
 import Plano from "../plano/Plano";
-import plano1 from "../../img/Group 1.png"
-import plano2 from "../../img/Group 2.png"
-import plano3 from "../../img/Group 3.png"
+import UserContext from "../contexts/UseContext";
 
 
 
 function EscolhaPlano() {
 
-  
+  const { token } = useContext(UserContext);
+  const [planos, setPlanos] = useState([]);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+
+  useEffect(() => {
+
+    const promise = axios.get("https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships", config);
+
+    promise.then((response) => {
+      console.log(response.data)
+      setPlanos(response.data)
+    })
+
+    promise.catch((err) => {
+      console.log(err);
+    })
+
+  }, [])
+
+  function listarPlanos(){
+    if(planos.length === 0){
+      return <></>
+    }else{
+      return planos.map((plano)=>(  <Link to={`/subscriptions/${plano.id}`}> <Plano key={plano.id} imagemPlano={plano.image} valorPlano={plano.price} /> </Link> ))
+    }
+
+  }
 
   return (
     <Container>
-        <h1>
-            Escolha seu Plano
-        </h1>
+      <h1>
+        Escolha seu Plano
+      </h1>
 
-        <Plano imagemPlano={plano1} valorPlano={"R$ 39,99"} />
-        <Plano imagemPlano={plano2} valorPlano={"R$ 69,99"} />
-        <Plano imagemPlano={plano3} valorPlano={"R$ 99,99"} />
+      {listarPlanos()}
 
     </Container>
   );

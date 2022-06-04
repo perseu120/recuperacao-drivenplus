@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function TelaCadastro() {
@@ -9,25 +9,25 @@ function TelaCadastro() {
   const [nome, setNome] = useState("");
   const [cpf, setCPF] = useState("");
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function cadastro() {
     const body = {
       email,
       name: nome,
-      image: cpf,
+      cpf,
       password: senha
     };
 
     const promise = axios.post(
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up",
+      "https://mock-api.driven.com.br/api/v4/driven-plus/auth/sign-up",
       body
     );
 
     promise.then((response) => {
       console.log(response.data);
 
-      // navigate("/");
+      navigate("/");
     });
 
     promise.catch((err) => {

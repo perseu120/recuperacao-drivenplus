@@ -15,6 +15,8 @@ function AssinarPlano() {
   const [CVC, setCVC] = useState("");
   const [validade, setValidade] = useState("");
 
+  const [popUpVisivel, setPopUpVisivel] = useState(false);
+
 
   return (
     <>
@@ -22,15 +24,18 @@ function AssinarPlano() {
         <Topo />
         <LogoPlano />
         <DadosPlano />
-        < Formulario nomeCartao={nomeCartao} setNomeCartao={setNomeCartao} numeroCartao={numeroCartao} setNumeroCartao={setNumeroCartao} CVC={CVC} setCVC={setCVC} validade={validade} setValidade={setValidade} /> 
+        < Formulario setPopUpVisivel={setPopUpVisivel} nomeCartao={nomeCartao} setNomeCartao={setNomeCartao} numeroCartao={numeroCartao} setNumeroCartao={setNumeroCartao} CVC={CVC} setCVC={setCVC} validade={validade} setValidade={setValidade} /> 
       </Container>
-      <PopUp />
+      {popUpVisivel? <PopUp setPopUpVisivel={setPopUpVisivel} /> : <></>}
     </>
     
   );   
 }
 
-function Formulario({nomeCartao, setNomeCartao,  numeroCartao, setNumeroCartao, CVC, setCVC, validade, setValidade }) {
+function Formulario({setPopUpVisivel, nomeCartao, setNomeCartao,  numeroCartao, setNumeroCartao, CVC, setCVC, validade, setValidade }) {
+  
+  const mudaEstadoPopup = false;
+  
   return (
 
     <form
@@ -69,11 +74,7 @@ function Formulario({nomeCartao, setNomeCartao,  numeroCartao, setNumeroCartao, 
         ></input>
       </SectionFlex>
 
-
-
-
-
-      <Button onClick={() => console.log("aqui vai ter funão de cadastro")}>Assinar</Button>
+      <Button onClick={()=>setPopUpVisivel(!mudaEstadoPopup)}>Assinar</Button>
     </form>
   );
 }
@@ -81,7 +82,7 @@ function Formulario({nomeCartao, setNomeCartao,  numeroCartao, setNumeroCartao, 
 function Topo() {
   return (
     <ContainerTopo>
-      <ion-icon name="arrow-undo"></ion-icon>
+      <Link to={"/subscriptions"}><ion-icon name="arrow-undo"></ion-icon></Link>
     </ContainerTopo>
   );
 }

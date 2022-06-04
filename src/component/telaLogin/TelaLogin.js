@@ -3,16 +3,16 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../img/Driven_white 1.png"
-// import UserContext from "../contexts/UseContext";
+ import UserContext from "../contexts/UseContext";
 
 function TelaLogin() {
 
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [email, setEmail] = useState("p@exemplo.com");
+  const [senha, setSenha] = useState("1");
 
-/*   const { token, setToken, setImg } = useContext(UserContext); */
+   const { token, setToken, dadosUsuario, setDadosUsuario} = useContext(UserContext); 
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function login() {
     const body = {
@@ -20,13 +20,20 @@ function TelaLogin() {
       password: senha
     }
 
-    const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body);
+    const promise = axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/login", body);
 
     promise.then((response) => {
 
-      // setToken(response.data.token);
-      // setImg(response.data.image);
-      // navigate('/habito');
+      console.log(response.data);
+      setDadosUsuario(response.data);
+      setToken(response.data.token);
+
+      if(response.data.membership === null){
+        navigate('/subscriptions');
+      }else{
+        navigate('/home');
+      }
+      
     })
     promise.catch((err) => { alert("erro ao realizar login"); })
 
