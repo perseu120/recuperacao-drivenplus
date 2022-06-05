@@ -11,11 +11,12 @@ function App() {
 
   const [token, setToken] = useState(null);
   const [dadosUsuario, setDadosUsuario] = useState(null);
+  const [dadosPlano, setDadosPlano] = useState(null);
 
   return (
     <div className="App">
 
-      <UserContext.Provider value={{ token, setToken, dadosUsuario, setDadosUsuario }}>
+      <UserContext.Provider value={{ token, setToken, dadosUsuario, setDadosUsuario, dadosPlano, setDadosPlano }}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<TelaLogin />} />

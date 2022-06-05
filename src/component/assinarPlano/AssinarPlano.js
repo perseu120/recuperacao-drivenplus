@@ -21,14 +21,6 @@ function AssinarPlano() {
 
   const { token } = useContext(UserContext);
 
-  let membershipId = localStorage.getItem("idCartao");
-
-  if(!membershipId){
-    membershipId = 3;
-  }else{
-    membershipId +=1;
-  }
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -36,7 +28,7 @@ function AssinarPlano() {
   }
 
   const dadosCartao = {
-    membershipId,
+    membershipId: id,
     cardName: nomeCartao,
     cardNumber: numeroCartao,
     securityNumber: parseInt(CVC),

@@ -20,7 +20,7 @@ function ContainerButton({dadosCartao, name, setPopUpVisivel}){
 
   const { token } = useContext(UserContext);
 
-  const {setDadosUsuario} = useContext(UserContext);
+  const {setDadosPlano} = useContext(UserContext);
   const navigate= useNavigate();
 
   const config = {
@@ -34,7 +34,7 @@ function ContainerButton({dadosCartao, name, setPopUpVisivel}){
 
     promise.then((response)=>{
       
-      setDadosUsuario(response.data);
+      setDadosPlano(response.data);
       localStorage.setItem("idCartao",dadosCartao.membershipId);
       navigate("/home");
     })
@@ -127,7 +127,7 @@ const Button = styled.div`
 
   width: 95px;
   height: 52px;
-  background: ${props => props.cor}
+  background: ${props => props.cor};
   border-radius: 8px;
   margin-left: 10px;
   

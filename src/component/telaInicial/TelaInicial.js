@@ -1,35 +1,50 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { HiUserCircle } from 'react-icons/hi';
-import plano1 from "../../img/Group 1.png"
 import UserContext from "../contexts/UseContext";
-
-
 
 
 function TelaInicial() {
 
 
-    const {dadosUsuario} = useContext(UserContext);
-    console.log(dadosUsuario)
+    const { dadosUsuario, token } = useContext(UserContext);
+    const navigate = useNavigate();
+    const { membership } = dadosUsuario;
+
+    function cancelarPlano(){
+
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.delete("https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions", config);
+    
+        promise.then(()=>{
+            alert("Plano cancelado com sucesso");
+            navigate("/subscriptions");
+        })
+        promise.catch((err)=>{console.log(err)});
+    }
+
     return (
         <Container>
 
-            <Topo />
+            <Topo image={dadosUsuario.membership.image} />
             <h2>
-                Ola fulano
+                Olá, {dadosUsuario.name}
             </h2>
 
             <Div>
                 <section>
-                    <Button cor={"#FF4791;"} > botoes de teste</Button>
-                    <Button cor={"#FF4791;"} > botoes de teste</Button>
+                    {membership.perks.map((itemPlano) => (<a key={itemPlano.id} href={itemPlano.link} target="_blank" ><Button cor={"#FF4791;"} >{itemPlano.title}</Button></a>))}
+
                 </section>
                 <section>
-                    <Button cor={"#FF4791;"} > botoes de teste</Button>
-                    <Button cor={"#FF4747;"} > botoes de teste</Button>
+                    <Button onClick={()=>{navigate("/subscriptions")}} cor={"#FF4791;"} > Mudar Plano</Button>
+                    <Button onClick={cancelarPlano}  cor={"#FF4747;"} > Cancelar plano</Button>
                 </section>
             </Div>
 
@@ -38,10 +53,10 @@ function TelaInicial() {
     );
 }
 
-function Topo() {
+function Topo({ image }) {
     return (
         <ContainerTopo>
-            <img src={plano1} />
+            <img src={image} />
             <HiUserCircle color=" #FFFFFF" size={"30px"} />
         </ContainerTopo>
     );
@@ -52,6 +67,18 @@ const Div = styled.div`
     flex-direction: column;
     height: 100vh;
     justify-content: space-around;
+
+    section{
+    a{
+        color: #FFFFFF;
+        text-decoration: none;
+    }
+    a:visited{
+        color: #FFFFFF;
+    }
+  }
+
+
 `
 const Container = styled.div`
 
@@ -92,19 +119,23 @@ const ContainerTopo = styled.div`
 
 const Button = styled.div`
 
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  height: 52px;
-  width: 299px;
-  border-radius: 8px;
-  padding: 18px, 122px, 18px, 122px;
-  background: ${props => props.cor}
-  border-radius: 8px;
-  margin-bottom: 8px;
-  
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    width: 299px;
+    border-radius: 8px;
+    background: ${props => props.cor};
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16px;
+    color: #FFFFFF;
+
 `
+
 
 export default TelaInicial;
