@@ -1,13 +1,13 @@
 import axios from "axios";
-import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import plano1 from "../../img/Group 1.png"
 
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { FaClipboardList } from 'react-icons/fa';
 
 import PopUp from "../popUp/PopUp.js";
+import UserContext from "../contexts/UseContext";
 
 function AssinarPlano() {
   const [nomeCartao, setNomeCartao] = useState("");
@@ -16,32 +16,124 @@ function AssinarPlano() {
   const [validade, setValidade] = useState("");
 
   const [popUpVisivel, setPopUpVisivel] = useState(false);
+  const [dadosAPI, setDadosAPI] = useState(null);
+  const { id } = useParams();
 
+  const { token } = useContext(UserContext);
+
+  let membershipId = localStorage.getItem("idCartao");
+
+  if(!membershipId){
+    membershipId = 3;
+  }else{
+    membershipId +=1;
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+
+  const dadosCartao = {
+    membershipId,
+    cardName: nomeCartao,
+    cardNumber: numeroCartao,
+    securityNumber: parseInt(CVC),
+    expirationDate: validade
+  }
+
+  useEffect(() => {
+
+    const promise = axios.get(`https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships/${id}`, config)
+
+    promise.then((response) => {
+
+      setDadosAPI(response.data)
+
+    })
+    promise.catch((err) => console.log(err))
+
+  }, [])
+
+  function Topo() {
+    return (
+      <ContainerTopo>
+        <Link to={"/subscriptions"}><ion-icon name="arrow-undo"></ion-icon></Link>
+      </ContainerTopo>
+    );
+  }
+
+  function LogoPlano() {
+
+    return (
+
+      <ContainerLogoPlano >
+
+        <img src={dadosAPI.image} alt="Logo do plano" />
+
+        <h2>
+          {dadosAPI.name}
+        </h2>
+      </ContainerLogoPlano>
+    );
+  }
+
+  function DadosPlano() {
+
+    return (
+      <ContainerDadosPlano>
+
+
+        <h6><FaClipboardList color={"#FF4791"} /> Beneficios:</h6>
+        <ol >
+          {dadosAPI.perks.map((itensPlano) => (<li key={itensPlano.id}>{itensPlano.title}</li>))}
+        </ol>
+
+
+
+        <h6><FaMoneyBillWave color={"#FF4791"} /> Preço:</h6>
+        <ul>
+          <li>{`R$ ${dadosAPI.price} cobrados mensalmente`}</li>
+        </ul>
+
+      </ContainerDadosPlano>
+    );
+  }
 
   return (
     <>
-      <Container>
-        <Topo />
-        <LogoPlano />
-        <DadosPlano />
-        < Formulario setPopUpVisivel={setPopUpVisivel} nomeCartao={nomeCartao} setNomeCartao={setNomeCartao} numeroCartao={numeroCartao} setNumeroCartao={setNumeroCartao} CVC={CVC} setCVC={setCVC} validade={validade} setValidade={setValidade} /> 
-      </Container>
-      {popUpVisivel? <PopUp setPopUpVisivel={setPopUpVisivel} /> : <></>}
+      {dadosAPI ?
+        <Container>
+          <Topo />
+          <LogoPlano />
+          <DadosPlano />
+          < Formulario setPopUpVisivel={setPopUpVisivel} nomeCartao={nomeCartao} setNomeCartao={setNomeCartao} numeroCartao={numeroCartao} setNumeroCartao={setNumeroCartao} CVC={CVC} setCVC={setCVC} validade={validade} setValidade={setValidade} />
+        </Container>
+        : console.log("carregando")
+      }
+
+      {popUpVisivel && dadosAPI ? <PopUp dadosCartao={dadosCartao} name={dadosAPI.name} setPopUpVisivel={setPopUpVisivel} /> : <></>}
     </>
-    
-  );   
+
+  );
+
 }
 
-function Formulario({setPopUpVisivel, nomeCartao, setNomeCartao,  numeroCartao, setNumeroCartao, CVC, setCVC, validade, setValidade }) {
-  
+function Formulario({setPopUpVisivel, nomeCartao, setNomeCartao, numeroCartao, setNumeroCartao, CVC, setCVC, validade, setValidade}) {
+
   const mudaEstadoPopup = false;
-  
+
+  function renderizarPopUp(e){
+    e.preventDefault();
+    setPopUpVisivel(!mudaEstadoPopup)
+  }
+
+
   return (
 
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
+      onSubmit={renderizarPopUp}
     >
 
       <SectionBox>
@@ -49,13 +141,13 @@ function Formulario({setPopUpVisivel, nomeCartao, setNomeCartao,  numeroCartao, 
           placeholder="Nome impresso no cartão"
           value={nomeCartao}
           onChange={(e) => setNomeCartao(e.target.value)}
-          type="email"
+          type="text"
         ></input>
         <input
           placeholder="Numero do cartão"
           value={numeroCartao}
           onChange={(e) => setNumeroCartao(e.target.value)}
-          type="password"
+          type="text"
         ></input>
       </SectionBox>
 
@@ -74,55 +166,12 @@ function Formulario({setPopUpVisivel, nomeCartao, setNomeCartao,  numeroCartao, 
         ></input>
       </SectionFlex>
 
-      <Button onClick={()=>setPopUpVisivel(!mudaEstadoPopup)}>Assinar</Button>
+      <Button type="submit">Assinar</Button>
     </form>
   );
 }
 
-function Topo() {
-  return (
-    <ContainerTopo>
-      <Link to={"/subscriptions"}><ion-icon name="arrow-undo"></ion-icon></Link>
-    </ContainerTopo>
-  );
-}
-
-function LogoPlano() {
-  return (
-
-    <ContainerLogoPlano>
-      <img src={plano1} alt="Logo do plano" />
-
-      <h2>
-        Driven Plus
-      </h2>
-    </ContainerLogoPlano>
-  );
-}
-
-function DadosPlano() {
-  return (
-    <ContainerDadosPlano>
-
-
-      <h6><FaClipboardList /> Beneficios:</h6>
-      <ol >
-        <li>Brindes exclusivos</li>
-        <li>Materiais bônus de web</li>
-      </ol>
-
-
-
-      <h6><FaMoneyBillWave /> Preço:</h6>
-      <ul>
-        <li>R$ 39,99 cobrados mensalmente</li>
-      </ul>
-
-    </ContainerDadosPlano>
-  );
-}
-
-const SectionFlex= styled.section`
+const SectionFlex = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -138,7 +187,7 @@ const SectionFlex= styled.section`
   
 `
 
-const SectionBox= styled.section`
+const SectionBox = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;

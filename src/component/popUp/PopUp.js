@@ -1,26 +1,54 @@
 import styled from "styled-components";
 import { FaWindowClose } from 'react-icons/fa';
+import axios from "axios";
+import { useContext } from "react";
+import UserContext from "../contexts/UseContext";
+import { useNavigate } from "react-router-dom";
 
-function PopUp({setPopUpVisivel}) {
+function PopUp({dadosCartao, name, setPopUpVisivel}) {
 
   return (
     <Container>
       <Topo setPopUpVisivel={setPopUpVisivel}/>
-       <ContainerButton />
+       <ContainerButton dadosCartao={dadosCartao} name={name} setPopUpVisivel={setPopUpVisivel} />
        
     </Container>
   );   
 }
 
-function ContainerButton(){
+function ContainerButton({dadosCartao, name, setPopUpVisivel}){
+
+  const { token } = useContext(UserContext);
+
+  const {setDadosUsuario} = useContext(UserContext);
+  const navigate= useNavigate();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+
+  function Submit(){
+    const promise = axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions", dadosCartao, config)
+
+    promise.then((response)=>{
+      
+      setDadosUsuario(response.data);
+      localStorage.setItem("idCartao",dadosCartao.membershipId);
+      navigate("/home");
+    })
+    promise.catch((err)=>{alert("erro ao assinar o plano")});
+  }
+
   return(
     <DivBotoes>
       <p>
-        Tem certeza que deseja assinar o plano DrivenPlus?
+        {`Tem certeza que deseja assinar o plano ${name}?`}
       </p>
       <div>
-        <Button cor="#FF4791;" >sim</Button>
-        <Button cor="#CECECE;" >não</Button> 
+        <Button onClick={Submit}  cor="#FF4791;" >sim</Button>
+        <Button onClick={()=>setPopUpVisivel(false)} cor="#CECECE;" >não</Button> 
       </div>
       
     </DivBotoes>

@@ -37,7 +37,7 @@ function EscolhaPlano() {
     if(planos.length === 0){
       return <></>
     }else{
-      return planos.map((plano)=>(  <Link to={`/subscriptions/${plano.id}`}> <Plano key={plano.id} imagemPlano={plano.image} valorPlano={plano.price} /> </Link> ))
+      return planos.map((plano, index)=>(  <Link key={index} to={`/subscriptions/${plano.id}`}> <Plano imagemPlano={plano.image} valorPlano={plano.price} /> </Link> ))
     }
 
   }

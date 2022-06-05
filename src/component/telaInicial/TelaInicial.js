@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { HiUserCircle } from 'react-icons/hi';
 import plano1 from "../../img/Group 1.png"
+import UserContext from "../contexts/UseContext";
 
 
 
@@ -11,7 +12,8 @@ import plano1 from "../../img/Group 1.png"
 function TelaInicial() {
 
 
-
+    const {dadosUsuario} = useContext(UserContext);
+    console.log(dadosUsuario)
     return (
         <Container>
 
