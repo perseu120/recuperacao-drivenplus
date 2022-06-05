@@ -7,8 +7,8 @@ import logo from "../../img/Driven_white 1.png"
 
 function TelaLogin() {
 
-  const [email, setEmail] = useState("dino@gmail.com");
-  const [senha, setSenha] = useState("0");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
   const { token, setToken, dadosUsuario, setDadosUsuario} = useContext(UserContext); 
 
