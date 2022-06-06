@@ -20,7 +20,9 @@ function ContainerButton({dadosCartao, name, setPopUpVisivel}){
 
   const { token } = useContext(UserContext);
 
-  const {setDadosPlano} = useContext(UserContext);
+  const {dadosUsuario,setDadosUsuario} = useContext(UserContext);
+
+  console.log("usuario", dadosUsuario)
   const navigate= useNavigate();
 
   const config = {
@@ -34,8 +36,12 @@ function ContainerButton({dadosCartao, name, setPopUpVisivel}){
 
     promise.then((response)=>{
       
-      setDadosPlano(response.data);
-      localStorage.setItem("idCartao",dadosCartao.membershipId);
+      const atualizarPlano = {
+        ...dadosUsuario,
+        membership: response.data.membership
+      }
+      setDadosUsuario(atualizarPlano);
+      console.log()
       navigate("/home");
     })
     promise.catch((err)=>{alert("erro ao assinar o plano")});
